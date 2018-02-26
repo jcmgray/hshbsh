@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class Slice:
     def __init__(self, pizza, owner, slices, id, ri, rf, ci, cf):
         self.last_neighbours = None
@@ -119,7 +122,6 @@ class Slice:
         def undo_move(self):
             pass
 
-
     def is_valid(self):
         """Return boolean of whether this slice has enough toppings and
         is small enough.
@@ -130,13 +132,11 @@ class Slice:
             (self.get_size() <= self.slices.max_size)
         )
 
-
     def score_size(self, size_factor=1):
         """Score based on the size of this slice.
         """
         ideal = self.slices.min_mush + self.slices.min_tom
         return size_factor * abs(self.get_size() - ideal)
-
 
     def score_perim(self, perim_factor=1.0):
         """Score based on number of neighbouring sites owner by another slice.
@@ -158,22 +158,19 @@ class Slice:
 
         return perim_factor * n
 
-
     def score_toppings(self, topping_factor=1):
         """Score based on which toppings this slice contains.
         """
         return topping_factor * (
             abs(self.get_mush_count() - self.slices.min_mush) +
-            abs(self.get_tom_count() - self.slices.min_tom) +
+            abs(self.get_tom_count() - self.slices.min_tom)
         )
-
 
     def score(self):
         """Return the current score of this Slice.
         """
         SCORE_FNS = ['score_size', 'score_perim', 'score_toppings']
         return sum(getattr(self, fn)() for fn in SCORE_FNS)
-
 
     def cost_move(self, direction, move):
         """Compute the score differential of shifting in ``direction``.
