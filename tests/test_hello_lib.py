@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 from numpy.testing import assert_allclose
-from hshbsh import hello, initialise_game
+from hshbsh import hello, initialise_game, slice_lib
 
 
 @pytest.mark.parametrize("name", ['Pete', 'Carlo', 'Tom', 'Johnnie'])
@@ -48,6 +48,12 @@ def test_initialise_slice_correct():
 	slice_info = [[1,0,1,0,1],[2,0,1,2,3],[3,2,3,0,1],[4,2,3,2,3]]
 	slices = 'what is this'
 
-	expected_dict = initialise_game.initialise_slice(pizza, owner, slice_info, slices)
+	expected_dict = { 1 : slice_lib.Slice(pizza, owner, slices, 1,0,1,0,1),
+					  2 : slice_lib.Slice(pizza, owner, slices, 2,0,1,2,3),
+					  3 : slice_lib.Slice(pizza, owner, slices, 3,2,3,0,1),
+					  4 : slice_lib.Slice(pizza, owner, slices, 4,2,3,2,3)
+					}
 
-	print(expected_dict)
+	obtained_dict = initialise_game.initialise_slice(pizza, owner, slice_info, slices)
+
+	assert expected_dict == obtained_dict

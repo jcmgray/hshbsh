@@ -1,4 +1,4 @@
-import slice_lib as sl
+from hshbsh import slice_lib
 import numpy as np
 
 # initialising the owner
@@ -43,6 +43,6 @@ def initialise_slice(pizza, owner, slice_info, slices):
 	slice_dictionary = {}
 
 	for identity, ri, rf, ci, cf in slice_info:
-		slice_dictionary[identity] = sl.Slice(pizza, owner, slices, identity, ri, rf, ci, cf)
+		slice_dictionary[identity] = slice_lib.Slice(pizza, owner, slices, identity, ri, rf, ci, cf)
 
 	return slice_dictionary
