@@ -118,3 +118,86 @@ class Slice:
 
         def undo_move(self):
             pass
+
+
+    def is_valid(self):
+        """Return boolean of whether this slice has enough toppings and
+        is small enough.
+        """
+        return (
+            (self.get_mush_count() >= self.slices.min_mush) and
+            (self.get_tom_count() >= self.slices.min_tom) and
+            (self.get_size() <= self.slices.max_size)
+        )
+
+
+    def score_size(self, size_factor=1):
+        """Score based on the size of this slice.
+        """
+        ideal = self.slices.min_mush + self.slices.min_tom
+        return size_factor * abs(self.get_size() - ideal)
+
+
+    def score_perim(self, perim_factor=1.0):
+        """Score based on number of neighbouring sites owner by another slice.
+        """
+        n = 0.0
+
+        # below
+        if self.ri > 0:
+            n += np.sum(self.slices.pizza[self.ri - 1, self.ci:self.cf + 1] > 0)
+        # above
+        if self.rf < self.slices.nrows - 1:
+            n += np.sum(self.slices.pizza[self.rf + 1, self.ci:self.cf + 1] > 0)
+        # left
+        if self.ci > 0:
+            n += np.sum(self.slices.pizza[self.ri:self.rf + 1, self.ci - 1] > 0)
+        # right
+        if self.cf < self.slices.ncols - 1:
+            n += np.sum(self.slices.pizza[self.ri:self.rf + 1, self.cf + 1] > 0)
+
+        return perim_factor * n
+
+
+    def score_toppings(self, topping_factor=1):
+        """Score based on which toppings this slice contains.
+        """
+        return topping_factor * (
+            abs(self.get_mush_count() - self.slices.min_mush) +
+            abs(self.get_tom_count() - self.slices.min_tom) +
+        )
+
+
+    def score(self):
+        """Return the current score of this Slice.
+        """
+        SCORE_FNS = ['score_size', 'score_perim', 'score_toppings']
+        return sum(getattr(self, fn)() for fn in SCORE_FNS)
+
+
+    def cost_move(self, direction, move):
+        """Compute the score differential of shifting in ``direction``.
+
+        Parameters
+        ----------
+        direction : {'left', 'right', 'up', 'down'}
+            Direction to perform move in.
+        move : {'shift', 'expand', 'shrink'}
+            What type of move to perform.
+
+        Return
+        ------
+        difference in score before and after
+        """
+        move_fn = getattr(self, move)
+
+        neighbours = self.get_neighbours(direction)
+        score_before = sum(n.score() for n in neighbours)
+
+        if not move_fn(direction, neighbours):
+            return None
+
+        score_after = sum(n.score() for n in neighbours)
+
+        self.undo(direction, neighbours)
+        return score_after - score_before
