@@ -24,3 +24,12 @@ pip install -U -e .
 ```
 
 Add ``--no-deps`` if you don't any ``pip`` to try and install the package requirements (e.g. they are already installed via ``conda``, pip sometimes doesn't recognise this).
+
+
+## Testing
+
+In the main repo run:
+
+```bash
+pytest
+```

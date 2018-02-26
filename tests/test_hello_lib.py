@@ -1,6 +1,8 @@
+import pytest
 from hshbsh import hello
 
 
-def test_hello():
-    x = hello('Johnnie')
-    assert x == 'Hello Johnnie!'
+@pytest.mark.parametrize("name", ['Pete', 'Carlo', 'Tom', 'Johnnie'])
+def test_hello(name):
+    x = hello(name)
+    assert x == 'Hello {}!'.format(name)
