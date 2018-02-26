@@ -1,4 +1,5 @@
 import numpy as np
+import itertools
 
 
 class Slice:
@@ -241,5 +242,41 @@ class Slice:
 
         score_after = sum(n.score() for n in neighbours)
 
-        self.undo(direction, neighbours)
+        self.undo()
         return score_after - score_before
+
+    def choose_move(self, T):
+        """
+        """
+
+        directions = ('left', 'right', 'up', 'down')
+        moves = ('shift', 'expand', 'slow')
+
+        costs = []
+        combos = tuple(itertools.product(directions, moves))
+
+        for direction, move in combos:
+            cost = self.cost_move(direction, move)
+            if cost is None:
+                continue
+
+            costs.append(cost)
+
+        costs = self.get_possible_move_costs()
+
+        if not costs:
+            return None
+
+        # botlzmann distribution
+        ps = np.exp(-np.array(costs) / T)
+
+        return combos[np.choice(range(len(costs)), ps)]
+
+    def update(self, T=0.0):
+        direction_move = self.choose_move(T)
+
+        if direction_move is None:
+            return None
+
+        direction, move = direction_move
+        getattr(self, move)(direction)
