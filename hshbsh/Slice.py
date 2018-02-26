@@ -55,7 +55,27 @@ class Slice:
                 x.shrink("right")
                 self.last_neighbours.append(x)
 
+    def _can_move(self, direction):
+        maxX, maxY = self.pizza.shape
+
+        if direction == "up":
+            if self.ri > 0:
+                return True
+        elif direction == "down":
+            if self.rf < maxY:
+                return True
+        elif direction == "left":
+            if self.ci > 0:
+                return True
+        elif direction == "right":
+            if self.cf < maxX:
+                return True
+        return False
+
     def shift(self, direction, neighbours=None):
+        if not self._can_move(direction):
+            return False
+
         if neighbours is None:
             neighbours = self.get_neighbours()
 
@@ -77,8 +97,13 @@ class Slice:
             self.cf += 1
 
         self._lay_slice()
+
+        return True
 
     def expand(self, direction, neighbours=None):
+        if not self._can_move(direction):
+            return False
+
         if neighbours is None:
             neighbours = self.get_neighbours()
 
@@ -97,7 +122,17 @@ class Slice:
 
         self._lay_slice()
 
+        return True
+
     def shrink(self, direction, neighbours=None):
+        if direction == "right" or direction == "left":
+            if not (self.ri < self.rf):
+                return False
+
+        if direction == "up" or direction == "down":
+            if not (self.ci < self.cf):
+                return False
+
         if neighbours is None:
             neighbours = self.get_neighbours()
 
@@ -116,5 +151,15 @@ class Slice:
 
         self._lay_slice()
 
-        def undo_move(self):
-            pass
+        return True
+
+    def undo_move(self):
+        for s in self.last_neighbours:
+            if self.last_dir == "up":
+                s.expand("down")
+            elif self.last_dir == "down":
+                s.expand("up")
+            elif self.last_dir == "left":
+                s.expand("right")
+            elif self.last_dir == "right":
+                s.expand("left")
