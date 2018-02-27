@@ -41,7 +41,8 @@ def test_initialise_slice_info_perfect_size():
 
 	assert_allclose( np.array(slice_info), np.array(expected_slice_info) )
 
-def test_initialise_slice_correct():
+@pytest.mark.parametrize("id_tag", [1,2,3,4])
+def test_initialise_slice_correct(id_tag):
 	
 	pizza = np.array([[0,1,1,1],[0,0,1,1],[0,1,1,1],[0,0,1,1]], int)
 	owner = np.array([[1,1,2,2,0],[1,1,2,2,0],[3,3,4,4,0],[3,3,4,4,0],[0,0,0,0,0]], int)
@@ -56,4 +57,4 @@ def test_initialise_slice_correct():
 
 	obtained_dict = initialise_game.initialise_slice(pizza, owner, slice_info, slices)
 
-	assert expected_dict == obtained_dict
+	assert expected_dict[id_tag].starve_count() == obtained_dict[id_tag].starve_count()
