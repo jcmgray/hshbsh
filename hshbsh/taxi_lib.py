@@ -6,7 +6,7 @@ class Taxi:
         self.c = 0
         self.jids = []
 
-    def do_closest(self, all_journeys):
+    def do_closest(self, all_journeys, B=0):
 
         journeys_in_cone = []
         journeys_in_cone_late = []
@@ -26,7 +26,7 @@ class Taxi:
 
         # compute distance to each
         def time_difference(journey):
-            return journey.ts - self.time
+            return journey.ts - self.time - B
 
         def time_difference_earliest(journey):
             return abs(journey.rs - self.r) + abs(journey.cs - self.c)

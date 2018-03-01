@@ -11,13 +11,13 @@ def main_function(fname, outname='answer.txt', wide=True):
     if wide:
         any_valid = True
         while any_valid:
-            any_valid = all(taxi.do_closest(journeys)
+            any_valid = all(taxi.do_closest(journeys, B=settings.bonus)
                             for taxi in taxis)
 
     else:
         for taxi in taxis:
             has_valid_journey = True
             while has_valid_journey:
-                has_valid_journey = taxi.do_closest(journeys)
+                has_valid_journey = taxi.do_closest(journeys, B=settings.bonus)
 
     write_journeys(taxis, outfilename=outname)
