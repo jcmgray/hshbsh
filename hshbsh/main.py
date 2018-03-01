@@ -1,7 +1,7 @@
 from .input import load_data
-from .taxi_lib import Taxi
-from .output import writeJourneys
 
+from .taxi_lib import Taxi
+from .output import write_journeys
 
 def main_function(fname):
     settings, journeys = load_data(fname)
@@ -14,4 +14,4 @@ def main_function(fname):
         while has_valid_journey:
             has_valid_journey = taxi.do_closest(journeys)
 
-    writeJourneys(taxis)
+    write_journeys(taxis)
