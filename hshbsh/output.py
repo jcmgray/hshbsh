@@ -8,12 +8,12 @@ def create_output(taxis):
             raise TypeError("Error :: this taxi ID is {}, but it cannot be less than 1".format(taxiID))
         if taxiID > TOTAL_NUMBER_OF_TAXIS:
             raise TypeError("Error :: this taxi ID is {}, but there are only {} taxis available".format(taxiID,TOTAL_NUMBER_OF_TAXIS))
-        numberOfJourneys=len(taxi)
+        journeys=taxi.jids
+        numberOfJourneys=len(journeys)
         if numberOfJourneys < 0:
             raise TypeError("Error :: this taxis has {} rides assigned. It cannot be less than 0".format(numberOfJourneys))
         if numberOfJourneys > TOTAL_NUMBER_OF_RIDES:
             raise TypeError("Error :: this taxis has {} rides assigned but there are only {} rides available".format(numberOfJourneys,TOTAL_NUMBER_OF_RIDES))
-        journeys=taxi.jids
         output=[numberOfJourneys]+journeys
         output=[str(x) for x in output]
         outputString+=" ".join(output)+"\n"
@@ -28,7 +28,6 @@ def write_journeys(taxis,outfilename="answer.txt",writeToFile=True):
             outfile.write(outputString)
     else:
         outputString=create_output(taxis)
-        print(outputString,end="")
         return outputString
 
 if __name__ == "__main__" : write_journeys([[0,1,2],[3,4,5],[6,7,8,9,10]],"answer.txt",False)
