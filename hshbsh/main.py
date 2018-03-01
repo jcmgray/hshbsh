@@ -9,8 +9,9 @@ def main_function(fname):
     taxis = [Taxi() for _ in range(settings.ntaxi)]
 
     for taxi in taxis:
-        while taxi.has_valid_journey:
 
-            taxi.do_closest()
+        has_valid_journey = True
+        while has_valid_journey:
+            has_valid_journey = taxi.do_closest(journeys)
 
     writeJourneys(taxis)
