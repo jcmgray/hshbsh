@@ -26,19 +26,20 @@ class Taxi:
 
         # compute distance to each
         def time_difference(journey):
-            return journey.ts - self.time - B
+            time = journey.ts - self.time
+            score = time - B
+            return score, time
 
         def time_difference_earliest(journey):
-            return abs(journey.rs - self.r) + abs(journey.cs - self.c)
+            time = abs(journey.rs - self.r) + abs(journey.cs - self.c)
+            score = time
+            return score, time
 
-        js_ts = [(time_difference(j), j) for j in journeys_in_cone]
-        js_ts_late = [(time_difference_earliest(j), j)
+        js_ts = [(*time_difference(j), j) for j in journeys_in_cone]
+        js_ts_late = [(*time_difference_earliest(j), j)
                       for j in journeys_in_cone_late]
 
-        if not js_ts:
-            return False
-
-        time, journey = min(js_ts , key=lambda x: x[0])
+        _, time, journey = min(js_ts + js_ts_late, key=lambda x: x[0])[1]
 
         # save id of nearest
         self.jids.append(journey.jid)
