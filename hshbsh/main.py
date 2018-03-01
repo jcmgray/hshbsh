@@ -1,7 +1,7 @@
 from .input import load_data
-from .Taxi import Taxi
-from .output import write_journeys
 
+from .taxi_lib import Taxi
+from .output import write_journeys
 
 def main_function(fname):
     settings, journeys = load_data(fname)

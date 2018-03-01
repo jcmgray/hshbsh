@@ -1,4 +1,4 @@
-from .Taxi import Taxi
+from .taxi_lib import Taxi
 from .input import load_data, Settings, Journey
 from .output import write_journeys
 from .main import main_function
