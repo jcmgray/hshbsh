@@ -1,4 +1,3 @@
-import functools
 
 class Taxi:
     def __init__(self):
@@ -7,34 +6,47 @@ class Taxi:
         self.c = 0
         self.jids = []
 
-
     def do_closest(self, all_journeys):
-        # filter journeys above - tls > self.time
-        journeys_above = list(filter(lambda x: x.tls > self.time, all_journeys.values()))
 
-        # filter cone
-        journeys_in_cone = list(filter(lambda x: abs(x.ts-self.time) >= abs(x.rs-self.r) + abs(x.cs-self.c), journeys_above))
-        journeys_in_cone_late = list(filter(lambda x: abs(x.tls-self.time) >= abs(x.rs-self.r) + abs(x.cs-self.c), journeys_above))
+        journeys_in_cone = []
+        journeys_in_cone_late = []
+        for j in all_journeys.values():
+            # filter journeys above - tls > self.time
+            if j.tls < self.time:
+                continue
 
-        if len(journeys_in_cone_late) == 0:
+            if abs(j.ts - self.time) >= abs(j.rs - self.r) + abs(j.cs - self.c):
+                journeys_in_cone.append(j)
+
+            elif abs(j.tls - self.time) >= abs(j.rs - self.r) + abs(j.cs - self.c):
+                journeys_in_cone_late.append(j)
+
+        if len(journeys_in_cone_late) + len(journeys_in_cone) == 0:
             return False
 
         # compute distance to each
-        nearest_by_start = functools.reduce(lambda x, y: min(x[1], y[1]), map(lambda x: (x.jid, x.ts - self.time), journeys_in_cone), (0, float("inf")))
-        nearest_by_latest_start = functools.reduce(lambda x, y: min(x[1], y[1]), map(lambda x: (x.jid, x.tls - self.time), journeys_in_cone_late))
-        nearest = nearest_by_start if nearest_by_start[1] >= nearest_by_latest_start[1] else nearest_by_latest_start
+        def time_difference(journey):
+            return journey.ts - self.time
+
+        def time_difference_earliest(journey):
+            return abs(journey.rs - self.r) + abs(journey.cs - self.c)
+
+        js_ts = [(time_difference(j), j) for j in journeys_in_cone]
+        js_ts_late = [(time_difference_earliest(j), j)
+                      for j in journeys_in_cone_late]
+
+        time, journey = min(js_ts + js_ts_late, key=lambda x: x[0])
 
         # save id of nearest
-        self.jids.append(nearest[0])
+        self.jids.append(journey.jid)
 
         # remove nearest
-        journey_to_do = all_journeys[nearest[0]]
-        del all_journeys[nearest[0]]
+        del all_journeys[journey.jid]
 
-        dist = abs(journey_to_do.rs-self.r) + abs(journey_to_do.cs-self.c) + journey_to_do.length
+        dist = (time + journey.length)
 
-        self.r = journey_to_do.rd
-        self.c = journey_to_do.cd
+        self.r = journey.rd
+        self.c = journey.cd
 
         self.time += dist
 
