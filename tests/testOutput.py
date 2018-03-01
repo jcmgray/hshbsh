@@ -1,6 +1,6 @@
 import pytest
 from hshbsh.output import write_journeys
-from hshbsh import Taxi
+from hshbsh import taxi_lib
 
 taxi1=Taxi()
 taxi2=Taxi()
