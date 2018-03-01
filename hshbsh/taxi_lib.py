@@ -39,7 +39,7 @@ class Taxi:
         js_ts_late = [(*time_difference_earliest(j), j)
                       for j in journeys_in_cone_late]
 
-        _, time, journey = min(js_ts + js_ts_late, key=lambda x: x[0])[1]
+        _, time, journey = min(js_ts + js_ts_late, key=lambda x: x[0])
 
         # save id of nearest
         self.jids.append(journey.jid)
