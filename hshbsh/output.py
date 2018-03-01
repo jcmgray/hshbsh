@@ -1,6 +1,6 @@
 from hshbsh import Taxi
 
-def writeJournies(taxis):
+def writeJourneys(taxis):
     outfilename="answer.txt"
     with open(outfilename,"w") as outfile:
         for i,taxi in enumerate(taxis):
@@ -14,4 +14,4 @@ def writeJournies(taxis):
             outfile.write(outputString)
     return
 
-if __name__ == "__main__" : writeJournies([[0,1,2],[3,4,5],[6,7,8,9,10]])
+if __name__ == "__main__" : writeJourneys([[0,1,2],[3,4,5],[6,7,8,9,10]])
