@@ -10,7 +10,7 @@ class Taxi:
 
     def do_closest(self, all_journeys):
         # filter journeys above - tls > self.time
-        journeys_above = list(filter(lambda x: x.tls > self.time, all_journeys))
+        journeys_above = list(filter(lambda x: x.tls > self.time, all_journeys.values()))
 
         # filter cone
         journeys_in_cone = list(filter(lambda x: abs(x.ts-self.time) >= abs(x.rs-self.r) + abs(x.cs-self.c), journeys_above))
