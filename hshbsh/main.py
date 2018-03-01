@@ -11,7 +11,8 @@ def main_function(fname, outname='answer.txt', wide=True):
     if wide:
         any_valid = True
         while any_valid:
-            any_valid = all(taxi.do_closest(journeys) for taxi in taxis)
+            any_valid = all(taxi.do_closest(journeys)
+                            for taxi in taxis)
 
     else:
         for taxi in taxis:
