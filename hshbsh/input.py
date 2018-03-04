@@ -32,6 +32,8 @@ class Settings:
         self.bonus = bonus
         self.tsteps = tsteps
 
+        self.score = 0
+
     def __repr__(self):
         return (
             "Settings(nrow={s.nrow}, ncol={s.ncol}, ntaxi={s.ntaxi}, "
